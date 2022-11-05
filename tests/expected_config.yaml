@@ -1,0 +1,7 @@
+# Cat field.
+cute_cat:
+  #Head.
+  head: "fluffy"
+  # Number of tails.
+  # Should normally be 1.
+  tails: 1

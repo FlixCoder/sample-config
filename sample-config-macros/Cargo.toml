@@ -1,0 +1,16 @@
+[package]
+edition = "2021"
+name = "sample-config-macros"
+version = "0.1.0"
+
+[lib]
+proc-macro = true
+
+[features]
+default = ["yaml"]
+yaml = []
+
+[dependencies]
+proc-macro2 = "1.0.47"
+quote = "1.0.21"
+syn = "1.0.103"

@@ -1,0 +1,15 @@
+[workspace]
+members = ["sample-config-macros"]
+resolver = "2"
+
+[package]
+edition = "2021"
+name = "sample-config"
+version = "0.1.0"
+
+[features]
+default = ["yaml"]
+yaml = ["sample-config-macros/yaml"]
+
+[dependencies]
+sample-config-macros = {version = "0.1.0", path = "sample-config-macros"}
