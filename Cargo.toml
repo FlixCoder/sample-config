@@ -3,8 +3,17 @@ members = ["sample-config-macros"]
 resolver = "2"
 
 [package]
+authors = ["Flix <felix.dommes@rwth-aachen.de>"]
+categories = ["config", "value-formatting"]
+description = "Generation of sample configs with documentation comments."
+documentation = "https://docs.rs/sample-config"
 edition = "2021"
+homepage = "https://github.com/FlixCoder/sample-config"
+keywords = ["config", "sample", "generate", "macro"]
+license = "MIT"
 name = "sample-config"
+readme = "README.md"
+repository = "https://github.com/FlixCoder/sample-config"
 version = "0.1.0"
 
 [features]

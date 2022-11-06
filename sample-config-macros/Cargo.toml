@@ -1,6 +1,14 @@
 [package]
+authors = ["Flix <felix.dommes@rwth-aachen.de>"]
+categories = ["config", "value-formatting"]
+description = "Macros for `sample-config`."
+documentation = "https://docs.rs/sample-config"
 edition = "2021"
+homepage = "https://github.com/FlixCoder/sample-config"
+keywords = ["config", "sample", "generate", "macro"]
+license = "MIT"
 name = "sample-config-macros"
+repository = "https://github.com/FlixCoder/sample-config"
 version = "0.1.0"
 
 [lib]
