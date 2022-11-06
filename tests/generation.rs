@@ -55,7 +55,7 @@ struct ExampleSubSubConfig {
 	some_field: Vec<SocketAddr>,
 }
 
-/// Example enum
+/// Example enum.
 #[derive(Debug, SampleConfig)]
 enum ExampleEnum {
 	/// A.

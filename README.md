@@ -1,6 +1,38 @@
 # Sample Config
 
-Automatic generation of sample configs with documentation comments. Just derive the `SampleConfig` trait on your config types, create an example object and generate a configuration using that.
+Automatic generation of sample configs with documentation comments. Just derive the `SampleConfig` trait on your config types, create an example object and generate a configuration file using that.
+
+## Usage
+
+Example:
+
+```rust
+use sample_config::SampleConfig;
+
+/// Example enum.
+#[derive(Debug, Default, SampleConfig)]
+enum ExampleEnum {
+    /// A.
+    #[default]
+    VariantA,
+}
+
+/// General documentation isn't used.
+#[derive(Debug, Default, SampleConfig)]
+struct ExampleConfig {
+    /// Some optional string.
+    string: Option<String>,
+    /// Some list of numbers.
+    numbers: Vec<usize>,
+    /// Enumeration of values.
+    value: ExampleEnum,
+}
+
+let instance = ExampleConfig::default();
+let _yaml_file_string = instance.generate_sample_yaml();
+```
+
+Please take a look at the tests to see more complicated examples.
 
 ## Lints
 

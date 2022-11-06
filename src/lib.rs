@@ -1,4 +1,4 @@
-//! Automatic generation of sample configs.
+#![doc = include_str!("../README.md")]
 
 mod implementations;
 
@@ -9,11 +9,12 @@ pub use sample_config_macros::SampleConfig;
 pub enum OutputType {
 	/// A value is put out.
 	Value,
-	/// Fields are put out (a struct).
+	/// Fields are put out (a struct or arrays).
 	Fields,
 }
 
-/// Generate sample configs for Rust data constructs automatically.
+/// Generate sample configs for Rust data constructs automatically using an
+/// example instance.
 pub trait SampleConfig {
 	/// Whether this data construct produces a value (e.g. String) or fields
 	/// (e.g. a struct).

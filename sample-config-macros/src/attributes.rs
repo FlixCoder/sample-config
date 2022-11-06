@@ -1,4 +1,4 @@
-//! Atrribute parsing.
+//! Attribute parsing.
 
 use quote::ToTokens;
 use syn::{
