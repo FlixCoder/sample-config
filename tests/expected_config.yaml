@@ -1,7 +1,25 @@
-# Cat field.
-cute_cat:
-  #Head.
-  head: "fluffy"
-  # Number of tails.
-  # Should normally be 1.
-  tails: 1
+#Example field 1.
+example_sub_struct:
+  # Some optional string.
+  string: "Cats are cute."
+  # Some list of numbers.
+  numbers:
+    - 1
+    - 2
+    - 3
+  # Sub-sub-struct.
+  sub_struct:
+    # Some documentation.
+    some_field:
+      - "127.0.0.1:8080"
+# Example field 2.
+# Has multiple lines.
+enum_test: VariantA
+# A path.
+path: "file.txt"
+# Vector of sub-structs.
+vec_of_structs:
+  - 
+    # Some documentation.
+    some_field:
+      []

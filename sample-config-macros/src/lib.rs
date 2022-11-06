@@ -1,6 +1,7 @@
 //! Macros for sample configs.
 #![allow(clippy::expect_used)] // Allowed in procedural macros.
 
+mod attributes;
 mod derive;
 
 use derive::derive_sample_config;

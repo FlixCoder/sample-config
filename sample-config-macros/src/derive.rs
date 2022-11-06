@@ -2,10 +2,9 @@
 
 use proc_macro2::{Ident, TokenStream};
 use quote::quote;
-use syn::{
-	parse::{Parse, ParseStream},
-	Data, DataEnum, DataStruct, DeriveInput, Expr, Field, Fields, Token, Type,
-};
+use syn::{Data, DataEnum, DataStruct, DeriveInput, Field, Fields, Type};
+
+use crate::attributes::DocComment;
 
 /// Derive `SampleConfig* for the given derive input.
 pub fn derive_sample_config(input: DeriveInput) -> TokenStream {
@@ -31,31 +30,11 @@ struct FieldData {
 	ty: Type,
 }
 
-/// A doc comment attribute.
-struct DocComment {
-	/// The actual comment expression.
-	comment: Expr,
-}
-
-impl Parse for DocComment {
-	fn parse(input: ParseStream) -> syn::Result<Self> {
-		input.parse::<Token![=]>()?;
-		Ok(Self { comment: input.parse()? })
-	}
-}
-
 impl FieldData {
 	/// Get `FieldData` from a field.
 	fn from_field(field: Field) -> Self {
-		let doc_comments = field
-			.attrs
-			.into_iter()
-			.filter(|attr| attr.path.is_ident("doc"))
-			.map(|attr| attr.tokens)
-			.map(syn::parse2::<DocComment>)
-			.collect::<syn::Result<Vec<_>>>()
-			.expect("Error parsing doc comments!");
-		let doc_comments = doc_comments.into_iter().map(|comment| comment.comment);
+		let doc_comments =
+			DocComment::from_attributes(&field.attrs).expect("Error parsing doc comments!");
 		let doc_comment = quote! {
 			concat!(#(#doc_comments, "\n"),*)
 		};
@@ -82,7 +61,7 @@ impl FieldData {
 			sample.push('\n');
 			sample.push_str(#ident_string);
 			sample.push(':');
-			if #ty::SAMPLE_OUTPUT_TYPE == sample_config::OutputType::Value {
+			if <#ty as sample_config::SampleConfig>::SAMPLE_OUTPUT_TYPE == sample_config::OutputType::Value {
 				sample.push(' ');
 				sample.push_str(&self.#ident.generate_sample_yaml());
 			} else {
@@ -123,6 +102,34 @@ fn derive_sample_config_on_struct(ident: Ident, data: DataStruct) -> TokenStream
 }
 
 /// Derive `SampleConfig` for enums.
-fn derive_sample_config_on_enum(_ident: Ident, _data: DataEnum) -> TokenStream {
-	unimplemented!("Not yet implemented!")
+fn derive_sample_config_on_enum(ident: Ident, data: DataEnum) -> TokenStream {
+	data.variants.iter().for_each(|variant| {
+		if !variant.fields.is_empty() {
+			unimplemented!("Enums with fields are not yet supported!");
+		}
+	});
+
+	let variant_idents = data.variants.iter().map(|variant| &variant.ident);
+	let variant_strings = data.variants.iter().map(|variant| variant.ident.to_string());
+
+	#[cfg(feature = "yaml")]
+	let generate_yaml = quote! {
+		fn generate_sample_yaml(&self) -> String {
+			match self {
+				#(
+					Self::#variant_idents => #variant_strings,
+				)*
+			}.to_owned()
+		}
+	};
+	#[cfg(not(feature = "yaml"))]
+	let generate_yaml = quote!();
+
+	quote! {
+		impl SampleConfig for #ident {
+			const SAMPLE_OUTPUT_TYPE: sample_config::OutputType = sample_config::OutputType::Value;
+
+			#generate_yaml
+		}
+	}
 }
