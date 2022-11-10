@@ -1,4 +1,5 @@
 #![allow(clippy::expect_used)] // Allowed in tests.
+#![allow(unused_imports)] // Without features this file is empty.
 
 use sample_config::SampleConfig;
 use serde::Deserialize;
