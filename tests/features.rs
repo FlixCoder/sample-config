@@ -1,13 +1,14 @@
 #![allow(clippy::expect_used)] // Allowed in tests.
 
 use sample_config::SampleConfig;
+use serde::Deserialize;
 
 #[cfg(feature = "url")]
 #[test]
 fn url_sample() {
 	use url::Url;
 
-	#[derive(Debug, SampleConfig)]
+	#[derive(Debug, PartialEq, Eq, SampleConfig, Deserialize)]
 	struct UrlConfig {
 		url: Url,
 	}
@@ -16,6 +17,10 @@ fn url_sample() {
 	let generated = config.generate_sample_yaml();
 	let expected = include_str!("expected/url_config.yaml");
 	assert_eq!(&generated, expected);
+
+	let deserialized: UrlConfig =
+		serde_yaml::from_str(expected).expect("deserialize expected YAML");
+	assert_eq!(deserialized, config);
 }
 
 #[cfg(feature = "tracing")]

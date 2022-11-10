@@ -3,9 +3,10 @@
 use std::{net::SocketAddr, path::PathBuf};
 
 use sample_config::SampleConfig;
+use serde::Deserialize;
 
 /// General documentation isn't used.
-#[derive(Debug, SampleConfig)]
+#[derive(Debug, PartialEq, Eq, SampleConfig, Deserialize)]
 struct TestConfig {
 	#[doc = "Example field 1."]
 	example_sub_struct: ExampleSubConfig,
@@ -38,7 +39,7 @@ impl Default for TestConfig {
 }
 
 /// General documentation isn't used.
-#[derive(Debug, SampleConfig)]
+#[derive(Debug, PartialEq, Eq, SampleConfig, Deserialize)]
 struct ExampleSubConfig {
 	/// Some optional string.
 	string: Option<String>,
@@ -49,14 +50,14 @@ struct ExampleSubConfig {
 }
 
 /// General documentation isn't used.
-#[derive(Debug, SampleConfig)]
+#[derive(Debug, PartialEq, Eq, SampleConfig, Deserialize)]
 struct ExampleSubSubConfig {
 	/// Some documentation.
 	some_field: Vec<SocketAddr>,
 }
 
 /// Example enum.
-#[derive(Debug, SampleConfig)]
+#[derive(Debug, PartialEq, Eq, SampleConfig, Deserialize)]
 enum ExampleEnum {
 	/// A.
 	VariantA,
@@ -68,4 +69,8 @@ fn generated_config() {
 	let generated = config.generate_sample_yaml();
 	let expected = include_str!("./expected/config_generation.yaml");
 	assert_eq!(&generated, expected);
+
+	let deserialized: TestConfig =
+		serde_yaml::from_str(expected).expect("deserialize expected YAML");
+	assert_eq!(deserialized, config);
 }
