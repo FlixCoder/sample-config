@@ -31,5 +31,11 @@ jobs:
     - name: Check and Clippy
       run: cargo lints clippy --all-targets --workspace -- -D warnings
 
+    - name: Check and Clippy for all features
+      run: cargo lints clippy --all-targets --workspace --all-features -- -D warnings
+
     - name: Run tests
-      run: cargo test --no-run && cargo test --workspace -- --nocapture
+      run: cargo test --workspace --no-run && cargo test --workspace -- --nocapture
+
+    - name: Run tests for all features
+      run: cargo test --workspace --all-features --no-run && cargo test --workspace --all-features -- --nocapture

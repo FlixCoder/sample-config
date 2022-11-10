@@ -18,7 +18,11 @@ version = "0.1.0"
 
 [features]
 default = ["yaml"]
+tracing = ["dep:tracing"]
+url = ["dep:url"]
 yaml = ["sample-config-macros/yaml"]
 
 [dependencies]
 sample-config-macros = {version = "0.1.0", path = "sample-config-macros"}
+tracing = {version = "0.1.37", default-features = false, optional = true}
+url = {version = "2.3.1", optional = true}

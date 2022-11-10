@@ -66,6 +66,6 @@ enum ExampleEnum {
 fn generated_config() {
 	let config = TestConfig::default();
 	let generated = config.generate_sample_yaml();
-	let expected = include_str!("expected_config.yaml");
+	let expected = include_str!("./expected/config_generation.yaml");
 	assert_eq!(&generated, expected);
 }
