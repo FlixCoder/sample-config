@@ -56,9 +56,11 @@ impl FieldData {
 		quote! {
 			let doc = #doc;
 			let doc = doc.trim_end().replace('\n', "\n#");
-			sample.push('#');
-			sample.push_str(&doc);
-			sample.push('\n');
+			if !doc.is_empty() {
+				sample.push('#');
+				sample.push_str(&doc);
+				sample.push('\n');
+			}
 			sample.push_str(#ident_string);
 			sample.push(':');
 			if <#ty as sample_config::SampleConfig>::SAMPLE_OUTPUT_TYPE == sample_config::OutputType::Value {

@@ -9,7 +9,6 @@ fn url_sample() {
 
 	#[derive(Debug, SampleConfig)]
 	struct UrlConfig {
-		/// URL.
 		url: Url,
 	}
 
