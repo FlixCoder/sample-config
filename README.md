@@ -1,5 +1,9 @@
 # Sample Config
 
+[![crates.io page](https://img.shields.io/crates/v/sample-config.svg)](https://crates.io/crates/sample-config)
+[![docs.rs page](https://docs.rs/sample-config/badge.svg)](https://docs.rs/sample-config/)
+![license: MIT](https://img.shields.io/crates/l/sample-config.svg)
+
 Automatic generation of sample configs with documentation comments. Just derive the `SampleConfig` trait on your config types, create an example object and generate a configuration file using that.
 
 ## Usage
