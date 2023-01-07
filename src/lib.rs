@@ -23,4 +23,8 @@ pub trait SampleConfig {
 	/// Generate a string containing the sample config in Yaml format.
 	#[cfg(feature = "yaml")]
 	fn generate_sample_yaml(&self) -> String;
+
+	/// Generate a string containing the sample config in JSON format.
+	#[cfg(feature = "json")]
+	fn generate_sample_json(&self) -> String;
 }

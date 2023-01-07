@@ -74,6 +74,36 @@ impl FieldData {
 			sample.push('\n');
 		}
 	}
+
+	/// Transform the field to a `TokenStream` adding the data fields to the
+	/// sample config output.
+	fn to_json_generator(&self) -> TokenStream {
+		let doc = &self.doc_comment;
+		let ident = &self.ident;
+		let ident_string = self.ident.to_string();
+		let ty = &self.ty;
+
+		quote! {
+			let doc = #doc;
+			let doc = doc.trim_end().replace('\n', "\n//");
+			if !doc.is_empty() {
+				sample.push_str("//");
+				sample.push_str(&doc);
+				sample.push('\n');
+			}
+			sample.push('"');
+			sample.push_str(#ident_string);
+			sample.push_str("\":");
+			if <#ty as sample_config::SampleConfig>::SAMPLE_OUTPUT_TYPE == sample_config::OutputType::Value {
+				sample.push(' ');
+				sample.push_str(&self.#ident.generate_sample_json());
+			} else {
+				sample.push(' ');
+				sample.push_str(self.#ident.generate_sample_json().trim());
+			}
+			sample.push_str(",\n");
+		}
+	}
 }
 
 /// Derive `SampleConfig` for structs.
@@ -82,6 +112,7 @@ fn derive_sample_config_on_struct(ident: Ident, data: DataStruct) -> TokenStream
 	let fields = fields.named.into_iter().map(FieldData::from_field).collect::<Vec<_>>();
 
 	let yaml_fields = fields.iter().map(FieldData::to_yaml_generator);
+	let json_fields = fields.iter().map(FieldData::to_json_generator);
 
 	#[cfg(feature = "yaml")]
 	let generate_yaml = quote! {
@@ -94,11 +125,26 @@ fn derive_sample_config_on_struct(ident: Ident, data: DataStruct) -> TokenStream
 	#[cfg(not(feature = "yaml"))]
 	let generate_yaml = quote!();
 
+	#[cfg(feature = "json")]
+	let generate_json = quote! {
+		fn generate_sample_json(&self) -> String {
+			let mut sample = String::new();
+			sample.push_str("{\n");
+			#(#json_fields)*
+			let mut sample = sample.trim().trim_end_matches(',').replace('\n', "\n  ");
+			sample.push_str("\n}\n");
+			sample
+		}
+	};
+	#[cfg(not(feature = "json"))]
+	let generate_json = quote!();
+
 	quote! {
 		impl SampleConfig for #ident {
 			const SAMPLE_OUTPUT_TYPE: sample_config::OutputType = sample_config::OutputType::Fields;
 
 			#generate_yaml
+			#generate_json
 		}
 	}
 }
@@ -111,8 +157,9 @@ fn derive_sample_config_on_enum(ident: Ident, data: DataEnum) -> TokenStream {
 		}
 	});
 
-	let variant_idents = data.variants.iter().map(|variant| &variant.ident);
-	let variant_strings = data.variants.iter().map(|variant| variant.ident.to_string());
+	let variant_idents = data.variants.iter().map(|variant| &variant.ident).collect::<Vec<_>>();
+	let variant_strings =
+		data.variants.iter().map(|variant| variant.ident.to_string()).collect::<Vec<_>>();
 
 	#[cfg(feature = "yaml")]
 	let generate_yaml = quote! {
@@ -127,11 +174,25 @@ fn derive_sample_config_on_enum(ident: Ident, data: DataEnum) -> TokenStream {
 	#[cfg(not(feature = "yaml"))]
 	let generate_yaml = quote!();
 
+	#[cfg(feature = "json")]
+	let generate_json = quote! {
+		fn generate_sample_json(&self) -> String {
+			match self {
+				#(
+					Self::#variant_idents => format!("\"{}\"", #variant_strings),
+				)*
+			}.to_owned()
+		}
+	};
+	#[cfg(not(feature = "json"))]
+	let generate_json = quote!();
+
 	quote! {
 		impl SampleConfig for #ident {
 			const SAMPLE_OUTPUT_TYPE: sample_config::OutputType = sample_config::OutputType::Value;
 
 			#generate_yaml
+			#generate_json
 		}
 	}
 }

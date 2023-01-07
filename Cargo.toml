@@ -17,7 +17,8 @@ repository = "https://github.com/FlixCoder/sample-config"
 version = "0.1.0"
 
 [features]
-default = ["yaml"]
+default = ["yaml", "json"]
+json = ["sample-config-macros/json"]
 tracing = ["dep:tracing"]
 url = ["dep:url"]
 yaml = ["sample-config-macros/yaml"]
@@ -28,6 +29,7 @@ tracing = {version = "0.1.37", default-features = false, optional = true}
 url = {version = "2.3.1", optional = true}
 
 [dev-dependencies]
+json5 = "0.4.1"
 serde = {version = "1.0.147", features = ["derive"]}
 serde_yaml = "0.9.14"
 url = {version = "2.3.1", features = ["serde"]}

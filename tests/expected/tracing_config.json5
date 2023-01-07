@@ -1,0 +1,6 @@
+{
+  // Level.
+  "level": "TRACE",
+  // Filter.
+  "filter": "off"
+}

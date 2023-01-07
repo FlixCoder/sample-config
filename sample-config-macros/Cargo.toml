@@ -15,7 +15,8 @@ version = "0.1.0"
 proc-macro = true
 
 [features]
-default = ["yaml"]
+default = []
+json = []
 yaml = []
 
 [dependencies]

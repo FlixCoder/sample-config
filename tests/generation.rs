@@ -64,7 +64,7 @@ enum ExampleEnum {
 }
 
 #[test]
-fn generated_config() {
+fn generated_yaml_config() {
 	let config = TestConfig::default();
 	let generated = config.generate_sample_yaml();
 	let expected = include_str!("./expected/config_generation.yaml");
@@ -72,5 +72,16 @@ fn generated_config() {
 
 	let deserialized: TestConfig =
 		serde_yaml::from_str(expected).expect("deserialize expected YAML");
+	assert_eq!(deserialized, config);
+}
+
+#[test]
+fn generated_json_config() {
+	let config = TestConfig::default();
+	let generated = config.generate_sample_json();
+	let expected = include_str!("./expected/config_generation.json5");
+	assert_eq!(&generated, expected);
+
+	let deserialized: TestConfig = json5::from_str(expected).expect("deserialize expected JSON");
 	assert_eq!(deserialized, config);
 }

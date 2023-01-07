@@ -1,4 +1,4 @@
 # Level.
-level: TRACE
+level: "TRACE"
 # Filter.
-filter: off
+filter: "off"
