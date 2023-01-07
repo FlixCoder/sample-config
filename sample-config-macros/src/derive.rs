@@ -111,7 +111,9 @@ fn derive_sample_config_on_struct(ident: Ident, data: DataStruct) -> TokenStream
 	let Fields::Named(fields) = data.fields else { panic!("Only named fields are allowed!") };
 	let fields = fields.named.into_iter().map(FieldData::from_field).collect::<Vec<_>>();
 
+	#[cfg(feature = "yaml")]
 	let yaml_fields = fields.iter().map(FieldData::to_yaml_generator);
+	#[cfg(feature = "json")]
 	let json_fields = fields.iter().map(FieldData::to_json_generator);
 
 	#[cfg(feature = "yaml")]
