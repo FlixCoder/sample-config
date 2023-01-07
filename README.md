@@ -33,7 +33,9 @@ struct ExampleConfig {
 }
 
 let instance = ExampleConfig::default();
-let _yaml_file_string = instance.generate_sample_yaml();
+let yaml_file_string = instance.generate_sample_yaml();
+std::fs::write("output.yaml", &yaml_file_string).unwrap();
+std::fs::remove_file("output.yaml").unwrap()
 ```
 
 Please take a look at the tests to see more complicated examples.
