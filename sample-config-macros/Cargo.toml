@@ -9,7 +9,7 @@ keywords = ["config", "sample", "generate", "macro"]
 license = "MIT"
 name = "sample-config-macros"
 repository = "https://github.com/FlixCoder/sample-config"
-version = "0.1.0"
+version = "0.2.0"
 
 [lib]
 proc-macro = true
